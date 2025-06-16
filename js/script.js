@@ -18,21 +18,12 @@ function secondsToMinutesSeconds(seconds) {
 }
 
 async function getSongs(folder) {
+    console.log(`Fetching songs from folder: ${folder}`);
     currFolder = folder;
-    let a = await fetch(`/${folder}/`)
-    let response = await a.text();
-    let div = document.createElement("div")
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a")
-    songs = []
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1])
-        }
-    }
- 
+    let response = await fetch(`/songs/${folder.split('/').pop()}/songs.json`);
+    songs = await response.json();
 
+    console.log(`Found ${songs.length} songs`);
 
     // Show all the songs in the playlist
     let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0]
@@ -52,6 +43,7 @@ async function getSongs(folder) {
     // Attach an event listener to each song
     Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach(e => {
         e.addEventListener("click", element => {
+            console.log(`Playing song: ${e.querySelector(".info").firstElementChild.innerHTML.trim()}`);
             playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
 
         })
@@ -61,6 +53,7 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
+    console.log(`playMusic called with track: ${track}, pause: ${pause}`);
     currentSong.src = `/${currFolder}/` + track
     if (!pause) {
         currentSong.play()
@@ -74,21 +67,12 @@ const playMusic = (track, pause = false) => {
 
 async function displayAlbums() {
     console.log("displaying albums")
-    let a = await fetch(`/songs/`)
-    let response = await a.text();
-    let div = document.createElement("div")
-    div.innerHTML = response;
-    let anchors = div.getElementsByTagName("a")
-    let cardContainer = document.querySelector(".cardContainer")
-    let array = Array.from(anchors)
-    for (let index = 0; index < array.length; index++) {
-        const e = array[index]; 
-        if (e.href.includes("/songs") && !e.href.includes(".htaccess")) {
-            let folder = e.href.split("/").slice(-2)[0]
-            // Get the metadata of the folder
-            let a = await fetch(`/songs/${folder}/info.json`)
-            let response = await a.json(); 
-            cardContainer.innerHTML = cardContainer.innerHTML + ` <div data-folder="${folder}" class="card">
+    let response = await fetch(`/songs/manifest.json`);
+    let albums = await response.json();
+    let cardContainer = document.querySelector(".cardContainer");
+    cardContainer.innerHTML = "";
+    for (const album of albums) {
+        cardContainer.innerHTML += ` <div data-folder="${album.folder}" class="card">
             <div class="play">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -97,11 +81,10 @@ async function displayAlbums() {
                 </svg>
             </div>
 
-            <img src="/songs/${folder}/cover.jpg" alt="">
-            <h2>${response.title}</h2>
-            <p>${response.description}</p>
-        </div>`
-        }
+            <img src="${album.cover}" alt="">
+            <h2>${album.title}</h2>
+            <p>${album.description}</p>
+        </div>`;
     }
 
     // Load the playlist whenever card is clicked
@@ -116,6 +99,7 @@ async function displayAlbums() {
 }
 
 async function main() {
+    console.log("Starting main function");
     // Get the list of all the songs
     await getSongs("./songs/ncs")
     playMusic(songs[0], true)
@@ -127,10 +111,12 @@ async function main() {
     // Attach an event listener to play, next and previous
     play.addEventListener("click", () => {
         if (currentSong.paused) {
+            console.log("Play button clicked - playing song");
             currentSong.play()
             play.src = "img/pause.svg"
         }
         else {
+            console.log("Play button clicked - pausing song");
             currentSong.pause()
             play.src = "img/play.svg"
         }
@@ -206,8 +192,6 @@ async function main() {
 
 
 
-
-
 }
 
-main() 
+main()

@@ -1,0 +1,32 @@
+[
+  {
+    "folder": "Angry_(mood)",
+    "title": "Angry Mood",
+    "description": "Songs for angry mood",
+    "cover": "/songs/Angry_(mood)/cover.jpg"
+  },
+  {
+    "folder": "Bright_(mood)",
+    "title": "Bright Mood",
+    "description": "Songs for bright mood",
+    "cover": "/songs/Bright_(mood)/cover.jpg"
+  },
+  {
+    "folder": "Chill_(mood)",
+    "title": "Chill Mood",
+    "description": "Songs for chill mood",
+    "cover": "/songs/Chill_(mood)/cover.jpg"
+  },
+  {
+    "folder": "Dark_(mood)",
+    "title": "Dark Mood",
+    "description": "Songs for dark mood",
+    "cover": "/songs/Dark_(mood)/cover.jpg"
+  },
+  {
+    "folder": "ncs",
+    "title": "Sleep Songs",
+    "description": "Songs for you",
+    "cover": "/songs/ncs/cover.jpg"
+  }
+]
