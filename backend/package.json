@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Backend for Spotify-like app with albums, songs, and user authentication",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon src/app.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
